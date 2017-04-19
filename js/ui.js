@@ -77,6 +77,7 @@ const Ui = (function () {
     });
   };
 
+  // Add class to a box after click to fill it with x or o background
   UiElements.prototype.changeBoxBackgroundAfterClick = function() {
     document.getElementsByClassName('boxes')[0].addEventListener('click', (e) => {
       if (!e.target.classList.contains('box-filled-1') && !e.target.classList.contains('box-filled-2')) {
@@ -97,6 +98,7 @@ const Ui = (function () {
    });
   };
 
+  // Game logic class init
   function GameLogic() {
    this.boxesList = document.getElementsByClassName('box');
    this.allWinningCombinations = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6],
@@ -106,6 +108,7 @@ const Ui = (function () {
    this.playersList = document.getElementsByClassName('players');
   };
 
+  // Checks if winning positions match player's
   GameLogic.prototype.checkPositions = function (positionList) {
       if (positionList.length <= 2) {
         return false;
@@ -126,6 +129,7 @@ const Ui = (function () {
       return atLeastOneWinning;
   };
 
+  // Helper function -adds class to show appropriate finish board
   GameLogic.prototype.finishElements = function (winnerNumber) {
     document.getElementsByClassName('message')[0].textContent = 'winner';
     document.getElementById('finish').className += ' screen-win-' + winnerNumber;
@@ -133,6 +137,7 @@ const Ui = (function () {
     $('#finish').show('slow');
   };
 
+  // Checks which player has the same positions and adds class to finish board
   GameLogic.prototype.checkGameResult = function () {
     if (this.checkPositions(this.oPositions)) {
       this.finishElements('one');
@@ -149,6 +154,7 @@ const Ui = (function () {
 
   };
 
+  // Push positions into x or oPositions list affter click
   GameLogic.prototype.pushPosition = function () {
    for (let i = 0; i < this.boxesList.length; i++) {
      this.boxesList[i].addEventListener('click', (e) => {
@@ -168,6 +174,7 @@ const Ui = (function () {
    }
   };
 
+  // Start new game after clicking the button
   GameLogic.prototype.finishButtonEvent = function (uiElements) {
     document.querySelector('#finish .button').addEventListener('click', (e) => {
       $('#finish').hide();
@@ -185,23 +192,21 @@ const Ui = (function () {
     });
   };
 
+  function startGame() {
+    const uiElements = new UiElements();
+    const gameLogic = new GameLogic();
+    uiElements.displayingElement('board', 'none');
+    uiElements.showBoardAfterClick();
+    uiElements.changeBoxBackground();
+    uiElements.changeBoxBackgroundAfterClick();
+    gameLogic.finishButtonEvent(uiElements);
+    gameLogic.pushPosition();
+  }
 
-
-function startGame() {
-  const uiElements = new UiElements();
-  const gameLogic = new GameLogic();
-  uiElements.displayingElement('board', 'none');
-  uiElements.showBoardAfterClick();
-  uiElements.changeBoxBackground();
-  uiElements.changeBoxBackgroundAfterClick();
-  gameLogic.finishButtonEvent(uiElements);
-  gameLogic.pushPosition();
-}
-
-return {
-  populateHtml: populateHtml,
-  startGame: startGame
-}
+  return {
+    populateHtml: populateHtml,
+    startGame: startGame
+  }
 })();
 
 Ui.populateHtml();
